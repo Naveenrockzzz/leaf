@@ -70,8 +70,6 @@ export const UpdateAddress = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Sending Data:", { id: documentId, data: userAddress }); // ✅ Debug request
-  
     dispatch(UpdateUserAddress({ id: documentId, data: userAddress }))
       .unwrap()
       .then((res) => {
@@ -80,7 +78,6 @@ export const UpdateAddress = () => {
       })
       .catch((error) => {
         toast.error("Something went wrong please try again");
-        console.error("API Error:", error);
       });
   };
 

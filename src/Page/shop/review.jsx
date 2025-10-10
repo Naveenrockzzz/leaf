@@ -1,26 +1,71 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { CloudUpload, Close } from "@mui/icons-material";
 import GradeIcon from "@mui/icons-material/Grade";
 import { toast } from "react-toastify";
+import { createReview } from "../../feature/leafSlice";
+import { fetchUserData } from "../../helper/helper";
+
 export const Review = () => {
   const [images, setImages] = useState([]);
+  const [imageFiles, setImageFiles] = useState([]);
   const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { productId } = useParams();
 
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
-    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+    const validImageFiles = files.filter((file) => file.type.startsWith("image/"));
 
-    if (imageFiles.length !== files.length) {
+    if (validImageFiles.length !== files.length) {
       toast.warn("Only image files are allowed.");
     }
 
-    const imageURLs = imageFiles.map((file) => URL.createObjectURL(file));
+    const imageURLs = validImageFiles.map((file) => URL.createObjectURL(file));
     setImages((prevImages) => [...prevImages, ...imageURLs]);
+    setImageFiles((prevFiles) => [...prevFiles, ...validImageFiles]);
   };
 
   const removeImage = (index) => {
     setImages(images.filter((_, i) => i !== index));
+    setImageFiles(imageFiles.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async () => {
+    if (!rating || !reviewText) {
+      toast.error("Please provide a rating and review text");
+      return;
+    }
+
+    const userData = fetchUserData();
+    if (!userData?.id) {
+      toast.error("Please login to submit a review");
+      navigate("/sign-in");
+      return;
+    }
+
+    try {
+      const reviewData = {
+        rating,
+        description: reviewText,
+        product: productId,
+        user: userData.id,
+      };
+
+      await dispatch(createReview(reviewData)).unwrap();
+      toast.success("Review submitted successfully!");
+      setRating(0);
+      setReviewText("");
+      setImages([]);
+      setImageFiles([]);
+      navigate(-1);
+    } catch (error) {
+      toast.error("Failed to submit review. Please try again.");
+    }
   };
 
   return (
@@ -57,6 +102,8 @@ export const Review = () => {
         multiline
         rows={4}
         className="w-full mt-2"
+        value={reviewText}
+        onChange={(e) => setReviewText(e.target.value)}
       />
 
       {/* Image Previews */}
@@ -95,7 +142,10 @@ export const Review = () => {
 
       {/* Submit Button */}
       <div className="text-center">
-        <button className="bg-blue-800 w-1/2 py-3 text-xl text-white rounded-md mt-6">
+        <button 
+          onClick={handleSubmit}
+          className="bg-blue-800 w-1/2 py-3 text-xl text-white rounded-md mt-6 hover:bg-blue-900 transition"
+        >
           Submit
         </button>
       </div>

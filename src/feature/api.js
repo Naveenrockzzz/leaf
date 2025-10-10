@@ -9,6 +9,35 @@ const axiosInstance = axios.create({
   },
 });
 
+// Add authorization header to all requests
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const user = JSON.parse(localStorage.getItem('leafUser') || '{}');
+    if (user.access_leaf) {
+      config.headers.Authorization = `Bearer ${user.access_leaf}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Handle response errors globally
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Unauthorized - clear user data and redirect to login
+      localStorage.removeItem('leafUser');
+      if (window.location.pathname !== '/sign-in') {
+        window.location.href = '/sign-in';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const get = async (url, config) => {
   const response = await axiosInstance.get(url, config || null);
   return response.data;

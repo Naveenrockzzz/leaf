@@ -42,8 +42,6 @@ export const loginUser = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await post("/auth/login", data);
-      console.log(response);
-
       return response;
     } catch (error) {
       return rejectWithValue(error?.response?.data || "SignIn failed!");
@@ -99,7 +97,6 @@ export const UpdateUserAddress = createAsyncThunk(
       const response = await update(`/addresses/${id}`, { data });
       return response.data;
     } catch (error) {
-      console.error("API Request Error:", error.response?.data);
       throw error;
     }
   }
@@ -122,6 +119,165 @@ export const fetchCategorytList = createAsyncThunk("category", async () => {
     return error;
   }
 });
+
+// Review APIs
+export const createReview = createAsyncThunk(
+  "review/create",
+  async (reviewData, { rejectWithValue }) => {
+    try {
+      const response = await post("/reviews", { data: reviewData });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to create review");
+    }
+  }
+);
+
+export const fetchReviews = createAsyncThunk(
+  "review/fetch",
+  async (productId) => {
+    try {
+      const response = await get(`/reviews?filters[product][documentId][$eq]=${productId}&populate=*`);
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  }
+);
+
+// Order APIs
+export const createOrder = createAsyncThunk(
+  "order/create",
+  async (orderData, { rejectWithValue }) => {
+    try {
+      const response = await post("/orders", { data: orderData });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to create order");
+    }
+  }
+);
+
+export const fetchOrders = createAsyncThunk(
+  "order/fetch",
+  async (userId) => {
+    try {
+      const response = await get(`/orders?filters[user][documentId][$eq]=${userId}&populate=*`);
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  }
+);
+
+export const fetchOrderDetails = createAsyncThunk(
+  "order/details",
+  async (orderId) => {
+    try {
+      const response = await get(`/orders/${orderId}?populate=*`);
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  }
+);
+
+// Wishlist APIs
+export const addToWishlist = createAsyncThunk(
+  "wishlist/add",
+  async ({ userId, productId }, { rejectWithValue }) => {
+    try {
+      const response = await post("/wishlists", { 
+        data: { 
+          user: userId, 
+          product: productId 
+        } 
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to add to wishlist");
+    }
+  }
+);
+
+export const fetchWishlist = createAsyncThunk(
+  "wishlist/fetch",
+  async (userId) => {
+    try {
+      const response = await get(`/wishlists?filters[user][documentId][$eq]=${userId}&populate=*`);
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  }
+);
+
+export const removeFromWishlist = createAsyncThunk(
+  "wishlist/remove",
+  async (wishlistId) => {
+    try {
+      await remove(`/wishlists/${wishlistId}`);
+      return wishlistId;
+    } catch (error) {
+      return error;
+    }
+  }
+);
+
+// Cart APIs
+export const addToCartAPI = createAsyncThunk(
+  "cart/add",
+  async ({ userId, productId, quantity }, { rejectWithValue }) => {
+    try {
+      const response = await post("/carts", { 
+        data: { 
+          user: userId, 
+          product: productId,
+          quantity: quantity 
+        } 
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to add to cart");
+    }
+  }
+);
+
+export const fetchCart = createAsyncThunk(
+  "cart/fetch",
+  async (userId) => {
+    try {
+      const response = await get(`/carts?filters[user][documentId][$eq]=${userId}&populate=*`);
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  }
+);
+
+export const updateCartAPI = createAsyncThunk(
+  "cart/update",
+  async ({ cartId, quantity }, { rejectWithValue }) => {
+    try {
+      const response = await update(`/carts/${cartId}`, { data: { quantity } });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to update cart");
+    }
+  }
+);
+
+export const removeFromCartAPI = createAsyncThunk(
+  "cart/remove",
+  async (cartId) => {
+    try {
+      await remove(`/carts/${cartId}`);
+      return cartId;
+    } catch (error) {
+      return error;
+    }
+  }
+);
 
 const leafSlice = createSlice({
   name: "leaf",
@@ -259,13 +415,9 @@ const leafSlice = createSlice({
     });
     builder.addCase(UpdateUserAddress.fulfilled, (state, action) => {
       state.user.loading = false;
-      console.log(action.payload);
-
       const index = state.user.addresses.findIndex(
         (address) => address.documentId === action.payload.data.documentId
       );
-
-      console.log(index);
 
       if (index !== -1) {
         state.user.addresses.splice(index, 1, action.payload.data);
@@ -296,6 +448,144 @@ const leafSlice = createSlice({
       state.category = action.payload;
     });
     builder.addCase(fetchCategorytList.rejected, (state, action) => {
+      state.loading = false;
+    });
+
+    // Create Review
+    builder.addCase(createReview.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(createReview.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(createReview.rejected, (state) => {
+      state.loading = false;
+    });
+
+    // Fetch Reviews
+    builder.addCase(fetchReviews.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchReviews.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(fetchReviews.rejected, (state) => {
+      state.loading = false;
+    });
+
+    // Create Order
+    builder.addCase(createOrder.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(createOrder.fulfilled, (state, action) => {
+      state.loading = false;
+      state.order.push(action.payload);
+    });
+    builder.addCase(createOrder.rejected, (state) => {
+      state.loading = false;
+    });
+
+    // Fetch Orders
+    builder.addCase(fetchOrders.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchOrders.fulfilled, (state, action) => {
+      state.loading = false;
+      state.order = action.payload;
+    });
+    builder.addCase(fetchOrders.rejected, (state) => {
+      state.loading = false;
+    });
+
+    // Fetch Order Details
+    builder.addCase(fetchOrderDetails.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchOrderDetails.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(fetchOrderDetails.rejected, (state) => {
+      state.loading = false;
+    });
+
+    // Add to Wishlist
+    builder.addCase(addToWishlist.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(addToWishlist.fulfilled, (state, action) => {
+      state.loading = false;
+      state.wishList.push(action.payload);
+    });
+    builder.addCase(addToWishlist.rejected, (state) => {
+      state.loading = false;
+    });
+
+    // Fetch Wishlist
+    builder.addCase(fetchWishlist.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchWishlist.fulfilled, (state, action) => {
+      state.loading = false;
+      state.wishList = action.payload;
+    });
+    builder.addCase(fetchWishlist.rejected, (state) => {
+      state.loading = false;
+    });
+
+    // Remove from Wishlist
+    builder.addCase(removeFromWishlist.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(removeFromWishlist.fulfilled, (state, action) => {
+      state.loading = false;
+      state.wishList = state.wishList.filter(item => item.id !== action.payload);
+    });
+    builder.addCase(removeFromWishlist.rejected, (state) => {
+      state.loading = false;
+    });
+
+    // Add to Cart API
+    builder.addCase(addToCartAPI.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(addToCartAPI.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(addToCartAPI.rejected, (state) => {
+      state.loading = false;
+    });
+
+    // Fetch Cart
+    builder.addCase(fetchCart.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchCart.fulfilled, (state, action) => {
+      state.loading = false;
+      state.cart = action.payload;
+    });
+    builder.addCase(fetchCart.rejected, (state) => {
+      state.loading = false;
+    });
+
+    // Update Cart
+    builder.addCase(updateCartAPI.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateCartAPI.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(updateCartAPI.rejected, (state) => {
+      state.loading = false;
+    });
+
+    // Remove from Cart API
+    builder.addCase(removeFromCartAPI.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(removeFromCartAPI.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(removeFromCartAPI.rejected, (state) => {
       state.loading = false;
     });
   },

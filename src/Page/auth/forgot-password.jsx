@@ -24,7 +24,7 @@ export const ForgotPassword = () => {
     }
     try {
       const data = { documentId: leafUserid, password: password };
-      await post("/auth/update-passowrd", data);
+      await post("/auth/update-password", data);
       toast.success("Password reset successfully!");
       sessionStorage.removeItem("resetEmail");
       navigate("/sign-in");

@@ -4,9 +4,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import PaymentOptions from "./payment-options";
 import useGeoLocation from "react-ipgeolocation";
 import axios from "axios";
-const stripePromise = loadStripe(
-  "pk_test_51NLfpWSGdaY5SfT3CFhW6bnCEMKOhbHXBqpC5Egbl8eIGXkZ4eIIyNPU0krWT0vtCVjERT5q72lPbc03p2mfMyIS00YMxJojrx"
-);
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export const Payment = () => {
   const location = useGeoLocation();
@@ -20,12 +19,9 @@ export const Payment = () => {
       if (res.data && res.data.length > 0) {
         const currencyCode = Object.keys(res.data[0].currencies)[0];
         setCurrency(currencyCode.toLowerCase());
-        console.log("Currency:", currencyCode);
-      } else {
-        console.error("Invalid API response");
       }
     } catch (error) {
-      console.error("Error fetching currency:", error);
+      // Handle error silently or show user-friendly message
     }
   };
 

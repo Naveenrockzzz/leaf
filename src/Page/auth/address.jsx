@@ -62,7 +62,6 @@ export const Address = () => {
       })
       .catch((error) => {
         toast.error("Something went wrong please try again");
-        console.log(error);
       });
   };
   return (

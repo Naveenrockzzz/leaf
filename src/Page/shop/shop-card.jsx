@@ -3,31 +3,52 @@ import ImageComponent from "../../component/image/ImageComponent";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../feature/leafSlice";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 export const ShopCard = ({ id, item }) => {
   const [isFavorite, setIsFavorite] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.leaf);
 
   const handleAddFavorite = (e, id) => {
     e.stopPropagation();
+    
+    // Check if user is logged in
+    if (!user?.id) {
+      toast.info("Please login to add items to wishlist");
+      navigate("/sign-in");
+      return;
+    }
+    
     if (isFavorite.includes(id)) {
       setIsFavorite(isFavorite.filter((favId) => favId !== id));
+      toast.success("Removed from wishlist");
     } else {
       setIsFavorite([...isFavorite, id]);
+      toast.success("Added to wishlist");
     }
   };
 
   const showProductDetails = (id) => {
-  navigate(`/product/details/${id}`);
-};
+    navigate(`/product/details/${id}`);
+  };
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
+    
+    // Check if user is logged in
+    if (!user?.id) {
+      toast.info("Please login to add items to cart");
+      navigate("/sign-in");
+      return;
+    }
+    
     dispatch(addToCart({ ...item, quantity: 1 }));
+    toast.success("Added to cart!");
   };
 
   // ✅ Safe access to image URL
@@ -35,48 +56,100 @@ export const ShopCard = ({ id, item }) => {
   ? `${import.meta.env.VITE_Image_BASE_URL}${item.image[0].url}`
   : "/placeholder.png";
 
-console.log("Image URL:", imageUrl);
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
       onClick={() => showProductDetails(item?.documentId)}
-      className="bg-white border border-gray-200 p-6 rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer"
+      className="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-100"
     >
-      {/* Optional: Favorite Icon */}
-      {/* <FavoriteIcon
-        className="cursor-pointer"
-        onClick={(e) => handleAddFavorite(e, id)}
-        style={{
-          width: "28px",
-          height: "28px",
-          fill: isFavorite.includes(id) ? "#1e3a8a" : "#ccc",
-        }}
-      /> */}
+      {/* Discount Badge */}
+      {item?.discountPrice && item?.OrigialPrice && (
+        <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+          {Math.round(((parseFloat(item.OrigialPrice) - parseFloat(item.discountPrice)) / parseFloat(item.OrigialPrice)) * 100)}% OFF
+        </div>
+      )}
 
-      <div className="w-full h-64 flex justify-center items-center overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-        >
-          <ImageComponent
-            src={item?.image?.[0]?.url
-      ? `${import.meta.env.VITE_Image_BASE_URL}${item.image[0].url}`
-      : "/placeholder.png"}
-            cardCss="w-full h-full"
-            imgCss="object-contain w-full h-full"
-          />
-        </motion.div>
+      {/* Wishlist Icon */}
+      <div 
+        onClick={(e) => handleAddFavorite(e, id)}
+        className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110"
+      >
+        <FavoriteIcon
+          sx={{
+            width: "20px",
+            height: "20px",
+            fill: isFavorite.includes(id) ? "#ef4444" : "#d1d5db",
+            transition: "all 0.3s"
+          }}
+        />
       </div>
 
-      <div className="mt-4 flex flex-col items-center">
-        <h3 className="text-lg font-medium text-gray-800 text-center">
+      {/* Product Image */}
+      <div className="relative w-full h-72 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+        <div className="absolute inset-0 flex justify-center items-center">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+            className="w-full h-full"
+          >
+            <ImageComponent
+              src={item?.image?.[0]?.url
+                ? `${import.meta.env.VITE_Image_BASE_URL}${item.image[0].url}`
+                : "/placeholder.png"}
+              cardCss="w-full h-full"
+              imgCss="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+            />
+          </motion.div>
+        </div>
+        
+        {/* Quick Add to Cart - Shows on Hover */}
+        <div className="absolute bottom-0 left-0 right-0 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+          <button
+            onClick={handleAddToCart}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center gap-2"
+          >
+            <ShoppingCartCheckoutIcon sx={{ fontSize: "20px" }} />
+            Quick Add to Cart
+          </button>
+        </div>
+      </div>
+
+      {/* Product Info */}
+      <div className="p-5">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[56px] group-hover:text-blue-600 transition-colors">
           {item?.title || "Product Name"}
         </h3>
-        <p className="text-sm text-gray-500 mt-1">
-          ₹{item?.OrigialPrice || "0.00"}
-        </p>
+        
+        <div className="flex items-center justify-between mt-3">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl font-bold text-gray-900">
+                ₹{item?.discountPrice || item?.OrigialPrice || "0.00"}
+              </span>
+              {item?.discountPrice && item?.OrigialPrice && (
+                <span className="text-sm text-gray-500 line-through">
+                  ₹{item?.OrigialPrice}
+                </span>
+              )}
+            </div>
+            {item?.discountPrice && (
+              <span className="text-xs text-green-600 font-medium mt-1">
+                You save ₹{(parseFloat(item.OrigialPrice) - parseFloat(item.discountPrice)).toFixed(2)}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Rating (placeholder - can be connected to reviews) */}
+        <div className="flex items-center gap-1 mt-3">
+          <div className="flex text-yellow-400">
+            {"★".repeat(4)}{"☆"}
+          </div>
+          <span className="text-xs text-gray-500">(4.0)</span>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

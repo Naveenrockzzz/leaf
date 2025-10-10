@@ -24,7 +24,8 @@ export const EmailComponent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://127.0.0.1:5000/send-otp", {
+      const OTP_SERVICE_URL = import.meta.env.VITE_OTP_SERVICE_URL;
+      const res = await axios.post(`${OTP_SERVICE_URL}/send-otp`, {
         email: email,
       });
 

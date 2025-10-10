@@ -56,8 +56,7 @@ export const ProductDetails = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "rapidshyp-token":
-              "8e3ca34d7ad8ac6598c3110cd8e3be08b8efe0b4ed0f28e71b3706e1f5dabcaf",
+            "rapidshyp-token": import.meta.env.VITE_RAPIDSHYP_TOKEN,
           },
           body: JSON.stringify({
             Pickup_pincode: "226202",
@@ -72,7 +71,6 @@ export const ProductDetails = () => {
       const data = await response.json();
       setServiceResponse(data);
     } catch (err) {
-      console.error(err);
       setError("Service check failed. Please check your pincode and try again.");
     } finally {
       setLoading(false);
