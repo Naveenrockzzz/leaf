@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createOrder, clearCart } from "../../../feature/leafSlice";
 import { fetchUserData } from "../../../helper/helper";
 
-const PaymentOptions = ({ currency }) => {
+const PaymentOptions = ({ currency, stripeDisabled = false }) => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();

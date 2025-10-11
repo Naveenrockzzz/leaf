@@ -4,6 +4,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import { deleteAddress, loginUser } from "../../feature/leafSlice";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 export const Address = ({ setOrderValue }) => {
   const { addresses } = useSelector((state) => state.leaf.user);
   const dispatch = useDispatch();
