@@ -218,84 +218,99 @@ const PaymentOptions = ({ currency, stripeDisabled = false }) => {
 
   return (
     <div className="w-full md:w-3/4 m-auto py-6 px-4 space-y-4">
-      {/* Debit & Credit Card */}
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Debit / Credit Card</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <form onSubmit={handleSubmit}>
-            <CardElement options={{ hidePostalCode: true }} />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}
-              disabled={isProcessing}
-            >
-              {isProcessing ? "Processing..." : "Pay with Card"}
-            </Button>
-          </form>
-        </AccordionDetails>
-      </Accordion>
-
-      {/* Google Pay */}
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Google Pay</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          {canUseGPay && paymentRequest ? (
-            <Button
-              variant="contained"
-              color="success"
-              onClick={() => paymentRequest.show()}
-            >
-              Pay with Google Pay
-            </Button>
-          ) : (
-            <Typography>Google Pay is not available</Typography>
-          )}
-        </AccordionDetails>
-      </Accordion>
-
-      {/* Net Banking */}
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Net Banking</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <TextField
-            fullWidth
-            label="Enter Bank Name"
-            variant="outlined"
-            sx={{ mb: 2 }}
-          />
-          <Button variant="contained" color="primary">
-            Pay via Net Banking
-          </Button>
-        </AccordionDetails>
-      </Accordion>
-
-      {/* Cash on Delivery */}
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Cash on Delivery</Typography>
+      {/* Cash on Delivery - PRIMARY OPTION */}
+      <Accordion defaultExpanded className="border-2 border-green-500">
+        <AccordionSummary 
+          expandIcon={<ExpandMoreIcon />}
+          className="bg-gradient-to-r from-green-50 to-green-100"
+        >
+          <Typography className="font-semibold text-green-800">
+            💵 Cash on Delivery (Recommended)
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <div className="space-y-4">
-            <Typography>Pay with cash when your order is delivered</Typography>
+            <Typography className="text-gray-700">
+              ✅ Pay with cash when your order arrives at your doorstep
+            </Typography>
+            <Typography className="text-sm text-gray-600">
+              📦 Safe & Convenient | 🚚 No advance payment required
+            </Typography>
             <Button 
-              variant="contained" 
-              color="secondary"
+              variant="contained"
+              style={{ 
+                backgroundColor: "#10b981",
+                color: "white",
+                padding: "12px 24px",
+                fontSize: "16px",
+                fontWeight: "600"
+              }}
               onClick={handleCODOrder}
               disabled={isProcessing}
+              fullWidth
             >
-              {isProcessing ? "Processing..." : "Confirm Order (COD)"}
+              {isProcessing ? "Processing Order..." : "Place Order - Pay on Delivery"}
             </Button>
           </div>
         </AccordionDetails>
       </Accordion>
+
+      {/* Show Stripe payment methods only if Stripe is working */}
+      {!stripeDisabled && stripe && (
+        <>
+          {/* Debit & Credit Card */}
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography>💳 Debit / Credit Card</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <form onSubmit={handleSubmit}>
+                <CardElement options={{ hidePostalCode: true }} />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  sx={{ mt: 2 }}
+                  disabled={isProcessing}
+                  fullWidth
+                >
+                  {isProcessing ? "Processing..." : "Pay with Card"}
+                </Button>
+              </form>
+            </AccordionDetails>
+          </Accordion>
+
+          {/* Google Pay */}
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography>📱 Google Pay</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {canUseGPay && paymentRequest ? (
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={() => paymentRequest.show()}
+                  fullWidth
+                >
+                  Pay with Google Pay
+                </Button>
+              ) : (
+                <Typography>Google Pay is not available</Typography>
+              )}
+            </AccordionDetails>
+          </Accordion>
+        </>
+      )}
+
+      {/* Show message if Stripe is disabled */}
+      {stripeDisabled && (
+        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <Typography className="text-sm text-blue-800">
+            ℹ️ Online payment temporarily unavailable. Please use Cash on Delivery.
+          </Typography>
+        </div>
+      )}
     </div>
   );
 };
