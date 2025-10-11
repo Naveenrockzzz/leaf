@@ -13,7 +13,17 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Public routes that DON'T need authentication
-    const publicRoutes = ['/products', '/categories', '/reviews'];
+    const publicRoutes = [
+      '/products', 
+      '/categories', 
+      '/reviews',
+      '/auth/login',
+      '/auth/register',
+      '/auth/forgot-password',
+      '/auth/reset-password',
+      '/auth/send-otp',
+      '/auth/verify-otp'
+    ];
     const isPublicRoute = publicRoutes.some(route => config.url?.includes(route));
     
     // Only add auth header for non-public routes
