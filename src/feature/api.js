@@ -9,20 +9,26 @@ const axiosInstance = axios.create({
   },
 });
 
-// Add authorization header to all requests
+// Add authorization header ONLY for protected routes
 axiosInstance.interceptors.request.use(
   (config) => {
-    try {
-      const userDataString = localStorage.getItem('leafUser');
-      if (userDataString && userDataString !== 'undefined' && userDataString !== 'null') {
-        const user = JSON.parse(userDataString);
-        if (user && user.access_leaf) {
-          config.headers.Authorization = `Bearer ${user.access_leaf}`;
+    // Public routes that DON'T need authentication
+    const publicRoutes = ['/products', '/categories', '/reviews'];
+    const isPublicRoute = publicRoutes.some(route => config.url?.includes(route));
+    
+    // Only add auth header for non-public routes
+    if (!isPublicRoute) {
+      try {
+        const userDataString = localStorage.getItem('leafUser');
+        if (userDataString && userDataString !== 'undefined' && userDataString !== 'null') {
+          const user = JSON.parse(userDataString);
+          if (user && user.access_leaf) {
+            config.headers.Authorization = `Bearer ${user.access_leaf}`;
+          }
         }
+      } catch (error) {
+        // If parsing fails, continue without auth header
       }
-    } catch (error) {
-      // If parsing fails, continue without auth header
-      console.error('Auth token parse error:', error);
     }
     return config;
   },
