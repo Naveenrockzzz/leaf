@@ -34,7 +34,7 @@ export const UserOrder = () => {
             {/* Progress Line */}
             <div className="absolute top-8 left-0 right-0 h-1 bg-gray-200 -z-10 hidden md:block">
               <div 
-                className="h-full bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-500"
+                className="h-full bg-gradient-to-r from-green-600 to-green-700 transition-all duration-500"
                 style={{ width: `${(orderValue / (steps.length - 1)) * 100}%` }}
               />
             </div>
@@ -51,7 +51,7 @@ export const UserOrder = () => {
                     className={`
                       relative w-16 h-16 rounded-full flex items-center justify-center mb-3 cursor-pointer transition-all duration-300
                       ${isCompleted ? 'bg-gradient-to-br from-green-500 to-green-600 shadow-lg' : 
-                        isActive ? 'bg-gradient-to-br from-blue-600 to-purple-600 shadow-2xl ring-4 ring-blue-200' : 
+                        isActive ? 'bg-gradient-to-br from-green-600 to-green-700 shadow-2xl ring-4 ring-green-200' : 
                         'bg-gray-200'}
                     `}
                     onClick={() => setOrderValue(step.step)}
@@ -64,14 +64,14 @@ export const UserOrder = () => {
                   </motion.div>
                   <span className={`
                     font-semibold text-sm md:text-base
-                    ${isActive ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-gray-500'}
+                    ${isActive ? 'text-green-600' : isCompleted ? 'text-green-600' : 'text-gray-500'}
                   `}>
                     {step.label}
                   </span>
                   {isActive && (
                     <motion.div
                       layoutId="activeStep"
-                      className="mt-2 h-1 w-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"
+                      className="mt-2 h-1 w-full bg-gradient-to-r from-green-600 to-green-700 rounded-full"
                     />
                   )}
                 </div>

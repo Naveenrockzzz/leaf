@@ -60,7 +60,7 @@ export const Cart = () => {
               </div>
               <Link
                 to="/product"
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
               >
                 Start Shopping
               </Link>
@@ -99,7 +99,7 @@ export const Cart = () => {
                   <div className="border-t border-gray-200 pt-4">
                     <div className="flex justify-between text-xl font-bold text-gray-900">
                       <span>Total</span>
-                      <span className="text-blue-600">₹{total.toFixed(2)}</span>
+                      <span className="text-green-600">₹{total.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
@@ -107,7 +107,7 @@ export const Cart = () => {
                 {/* Checkout Button */}
                 <button
                   onClick={handleCheckout}
-                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 mb-4"
+                  className="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 mb-4"
                 >
                   {user?.id ? 'Proceed to Checkout' : 'Login to Checkout'}
                 </button>
@@ -120,7 +120,7 @@ export const Cart = () => {
 
                 <Link
                   to="/product"
-                  className="block text-center text-blue-600 hover:text-blue-700 font-medium"
+                  className="block text-center text-green-600 hover:text-green-700 font-medium"
                 >
                   ← Continue Shopping
                 </Link>

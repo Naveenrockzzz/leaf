@@ -49,7 +49,7 @@ export const Profile = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Profile Header Card */}
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden mb-8">
-          <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 h-32"></div>
+          <div className="bg-gradient-to-r from-green-600 via-green-500 to-green-700 h-32"></div>
           <div className="px-8 pb-8">
             <div className="flex md:flex-row flex-col md:items-end items-center gap-6 -mt-16">
               {/* Profile Picture */}
@@ -124,14 +124,14 @@ export const Profile = () => {
                   backgroundColor: "#f3f4f6",
                 },
                 "&.Mui-selected": {
-                  color: "#2563eb",
-                  backgroundColor: "#eff6ff",
+                  color: "#16a34a",
+                  backgroundColor: "#f0fdf4",
                 },
               },
               "& .MuiTabs-indicator": {
                 height: "3px",
                 borderRadius: "3px 3px 0 0",
-                backgroundColor: "#2563eb",
+                backgroundColor: "#16a34a",
               },
             }}
           >

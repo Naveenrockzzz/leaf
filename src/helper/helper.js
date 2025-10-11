@@ -12,8 +12,15 @@ export const storeLeafUser = (data) => {
 };
 
 export const fetchUserData = () => {
-  const stringifedUser = localStorage.getItem("leafUser") || ' "" ';
-  return JSON.parse(stringifedUser || {});
+  const stringifiedUser = localStorage.getItem("leafUser");
+  if (!stringifiedUser || stringifiedUser === 'undefined' || stringifiedUser === 'null') {
+    return {};
+  }
+  try {
+    return JSON.parse(stringifiedUser);
+  } catch (error) {
+    return {};
+  }
 };
 
 export const Protector = ({ Component }) => {
@@ -21,7 +28,7 @@ export const Protector = ({ Component }) => {
   const { access_leaf } = fetchUserData();
   useEffect(() => {
     if (!access_leaf) {
-      navigate("/login");
+      navigate("/sign-in");
     }
   }, [navigate, access_leaf]);
 };

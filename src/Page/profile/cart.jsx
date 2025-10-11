@@ -41,12 +41,12 @@ export const Cart = () => {
           <p className="text-gray-600 mb-8">
             Start adding products to your cart
           </p>
-          <Link
-            to="/product"
-            className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
-          >
-            Browse Products
-          </Link>
+              <Link
+                to="/product"
+                className="px-8 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
+              >
+                Browse Products
+              </Link>
         </motion.div>
       ) : (
         <div className="space-y-6">
@@ -58,7 +58,7 @@ export const Cart = () => {
             </div>
             <div className="text-right">
               <p className="text-sm text-gray-600">Total</p>
-              <p className="text-3xl font-bold text-blue-600">₹{total.toFixed(2)}</p>
+              <p className="text-3xl font-bold text-green-600">₹{total.toFixed(2)}</p>
             </div>
           </div>
 
@@ -98,7 +98,7 @@ export const Cart = () => {
                   <h4 className="font-bold text-gray-900 mb-2 line-clamp-2 h-12">
                     {item?.title || "Product Name"}
                   </h4>
-                  <p className="text-2xl font-bold text-blue-600 mb-3">
+                  <p className="text-2xl font-bold text-green-600 mb-3">
                     ₹{parseFloat(item.OrigialPrice || item.discountPrice || 0).toFixed(2)}
                   </p>
 
@@ -146,7 +146,7 @@ export const Cart = () => {
               </div>
               <Link
                 to="/order"
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
               >
                 Proceed to Checkout
               </Link>

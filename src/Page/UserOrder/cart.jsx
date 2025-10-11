@@ -46,12 +46,12 @@ export const Cart = ({ setOrderValue }) => {
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Cart is Empty</h2>
               <p className="text-gray-600">Add some products to get started</p>
             </div>
-            <Link
-              to="/product"
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-semibold hover:shadow-lg transition-all duration-300"
-            >
-              Browse Products
-            </Link>
+              <Link
+                to="/product"
+                className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl font-semibold hover:shadow-lg transition-all duration-300"
+              >
+                Browse Products
+              </Link>
           </div>
         </motion.div>
       ) : (
@@ -163,7 +163,7 @@ export const Cart = ({ setOrderValue }) => {
               <div className="flex items-center justify-center">
                 <button
                   onClick={() => setOrderValue(1)}
-                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                  className="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
                 >
                   Proceed to Address
                 </button>

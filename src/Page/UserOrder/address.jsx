@@ -31,12 +31,12 @@ export const Address = ({ setOrderValue }) => {
           <p className="text-gray-600 mb-8 max-w-md">
             Please add a delivery address to continue with your order
           </p>
-          <Link
-            to="/address"
-            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
-          >
-            + Add New Address
-          </Link>
+              <Link
+                to="/address"
+                className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
+              >
+                + Add New Address
+              </Link>
         </div>
       ) : (
         <div className="space-y-6">
@@ -48,7 +48,7 @@ export const Address = ({ setOrderValue }) => {
             </div>
             <Link
               to="/address"
-              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all duration-300 text-sm"
+              className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl font-medium hover:shadow-lg transition-all duration-300 text-sm"
             >
               + Add New
             </Link>
@@ -66,15 +66,15 @@ export const Address = ({ setOrderValue }) => {
                 className={`
                   relative group cursor-pointer rounded-2xl p-6 transition-all duration-300
                   ${selectedAddress?.documentId === item?.documentId 
-                    ? 'bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-500 shadow-lg' 
-                    : 'bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md'
+                    ? 'bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-500 shadow-lg' 
+                    : 'bg-white border-2 border-gray-200 hover:border-green-300 hover:shadow-md'
                   }
                 `}
               >
                 {/* Selected Indicator */}
                 {selectedAddress?.documentId === item?.documentId && (
                   <div className="absolute top-4 right-4">
-                    <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full p-1">
+                    <div className="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-full p-1">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                       </svg>
@@ -86,13 +86,13 @@ export const Address = ({ setOrderValue }) => {
                 <div className="mb-3">
                   <div className={`inline-flex p-3 rounded-xl ${
                     selectedAddress?.documentId === item?.documentId 
-                      ? 'bg-blue-100' 
-                      : 'bg-gray-100 group-hover:bg-blue-50'
+                      ? 'bg-green-100' 
+                      : 'bg-gray-100 group-hover:bg-green-50'
                   }`}>
                     <svg className={`w-6 h-6 ${
                       selectedAddress?.documentId === item?.documentId 
-                        ? 'text-blue-600' 
-                        : 'text-gray-600 group-hover:text-blue-600'
+                        ? 'text-green-600' 
+                        : 'text-gray-600 group-hover:text-green-600'
                     }`} fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
                     </svg>
@@ -116,7 +116,7 @@ export const Address = ({ setOrderValue }) => {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                   <span className={`text-sm font-semibold ${
                     selectedAddress?.documentId === item?.documentId 
-                      ? 'text-blue-600' 
+                      ? 'text-green-600' 
                       : 'text-gray-600'
                   }`}>
                     {selectedAddress?.documentId === item?.documentId ? 'Selected' : 'Click to select'}
@@ -124,7 +124,7 @@ export const Address = ({ setOrderValue }) => {
                   <Link 
                     to={`/address/${item?.documentId}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1 hover:underline"
+                    className="text-green-600 hover:text-green-700 font-medium text-sm flex items-center gap-1 hover:underline"
                   >
                     <EditIcon sx={{ fontSize: 16 }} />
                     Edit

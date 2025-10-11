@@ -12,9 +12,17 @@ const axiosInstance = axios.create({
 // Add authorization header to all requests
 axiosInstance.interceptors.request.use(
   (config) => {
-    const user = JSON.parse(localStorage.getItem('leafUser') || '{}');
-    if (user.access_leaf) {
-      config.headers.Authorization = `Bearer ${user.access_leaf}`;
+    try {
+      const userDataString = localStorage.getItem('leafUser');
+      if (userDataString && userDataString !== 'undefined' && userDataString !== 'null') {
+        const user = JSON.parse(userDataString);
+        if (user && user.access_leaf) {
+          config.headers.Authorization = `Bearer ${user.access_leaf}`;
+        }
+      }
+    } catch (error) {
+      // If parsing fails, continue without auth header
+      console.error('Auth token parse error:', error);
     }
     return config;
   },
@@ -23,16 +31,14 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Handle response errors globally
+// Handle response errors globally - DISABLED auto-logout for now
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Temporarily disabled auto-logout to debug
+    // Just log the error and continue
     if (error.response?.status === 401) {
-      // Unauthorized - clear user data and redirect to login
-      localStorage.removeItem('leafUser');
-      if (window.location.pathname !== '/sign-in') {
-        window.location.href = '/sign-in';
-      }
+      console.warn('401 Unauthorized - but not logging out:', error.config?.url);
     }
     return Promise.reject(error);
   }

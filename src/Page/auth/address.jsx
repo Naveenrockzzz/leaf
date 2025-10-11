@@ -57,11 +57,11 @@ export const Address = () => {
     dispatch(createUserAddress(userAddress))
       .unwrap()
       .then((res) => {
-        toast.success("Your Address has been created");
-        navigate("/login");
+        toast.success("Your Address has been created! Please login to continue.");
+        navigate("/sign-in");
       })
       .catch((error) => {
-        toast.error("Something went wrong please try again");
+        toast.error(error?.message || "Failed to create address. Please try again.");
       });
   };
   return (

@@ -93,15 +93,15 @@ export const Shop = () => {
             <button
               className={`group relative px-6 py-3 rounded-2xl font-medium text-sm transition-all duration-300 ${
                 !categoryId
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105"
+                  ? "bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105"
               }`}
               onClick={() => handleCategoryClick(null, "All Products")}
             >
               {!categoryId && (
                 <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                 </span>
               )}
               <span className="flex items-center gap-2">
@@ -119,7 +119,7 @@ export const Shop = () => {
                   key={category.documentId}
                   className={`group relative px-6 py-3 rounded-2xl font-medium text-sm transition-all duration-300 ${
                     isActive
-                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105"
+                      ? "bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105"
                   }`}
                   onClick={() =>
@@ -128,8 +128,8 @@ export const Shop = () => {
                 >
                   {isActive && (
                     <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                     </span>
                   )}
                   {category.Name}
@@ -152,7 +152,7 @@ export const Shop = () => {
               <p className="text-gray-600">We couldn't find any items in this category yet.</p>
               <button
                 onClick={() => handleCategoryClick(null, "All Products")}
-                className="mt-4 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-medium hover:shadow-lg transition-all duration-300"
+                className="mt-4 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl font-medium hover:shadow-lg transition-all duration-300"
               >
                 View All Products
               </button>

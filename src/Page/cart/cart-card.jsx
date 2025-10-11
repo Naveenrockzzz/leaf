@@ -129,7 +129,7 @@ export const CartCard = ({ item, index }) => {
             {/* Item Total */}
             <div className="text-right">
               <p className="text-sm text-gray-600">Item Total</p>
-              <p className="text-2xl font-bold text-blue-600">
+              <p className="text-2xl font-bold text-green-600">
                 ₹{itemTotal.toFixed(2)}
               </p>
             </div>

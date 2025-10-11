@@ -56,18 +56,25 @@ export const ShopCard = ({ id, item }) => {
   ? `${import.meta.env.VITE_Image_BASE_URL}${item.image[0].url}`
   : "/placeholder.png";
 
+  // Calculate discount percentage
+  const originalPrice = parseFloat(item?.OrigialPrice || 0);
+  const discountPrice = parseFloat(item?.discountPrice || 0);
+  const discountPercent = originalPrice > 0 && discountPrice > 0 && discountPrice < originalPrice
+    ? Math.round(((originalPrice - discountPrice) / originalPrice) * 100)
+    : 0;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       onClick={() => showProductDetails(item?.documentId)}
-      className="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-100"
+      className="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer border border-green-100"
     >
-      {/* Discount Badge */}
-      {item?.discountPrice && item?.OrigialPrice && (
-        <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-          {Math.round(((parseFloat(item.OrigialPrice) - parseFloat(item.discountPrice)) / parseFloat(item.OrigialPrice)) * 100)}% OFF
+      {/* Discount Badge - Only show if discount > 0 */}
+      {discountPercent > 0 && (
+        <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-green-600 to-green-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+          {discountPercent}% OFF
         </div>
       )}
 
@@ -80,7 +87,7 @@ export const ShopCard = ({ id, item }) => {
           sx={{
             width: "20px",
             height: "20px",
-            fill: isFavorite.includes(id) ? "#ef4444" : "#d1d5db",
+            fill: isFavorite.includes(id) ? "#16a34a" : "#d1d5db",
             transition: "all 0.3s"
           }}
         />
@@ -108,7 +115,7 @@ export const ShopCard = ({ id, item }) => {
         <div className="absolute bottom-0 left-0 right-0 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
           <button
             onClick={handleAddToCart}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-300 flex items-center justify-center gap-2"
           >
             <ShoppingCartCheckoutIcon sx={{ fontSize: "20px" }} />
             Quick Add to Cart
@@ -118,25 +125,27 @@ export const ShopCard = ({ id, item }) => {
 
       {/* Product Info */}
       <div className="p-5">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[56px] group-hover:text-blue-600 transition-colors">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[56px] group-hover:text-green-600 transition-colors">
           {item?.title || "Product Name"}
         </h3>
         
         <div className="flex items-center justify-between mt-3">
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-gray-900">
-                ₹{item?.discountPrice || item?.OrigialPrice || "0.00"}
+              <span className="text-2xl font-bold text-green-700">
+                ₹{discountPrice > 0 && discountPrice < originalPrice ? discountPrice.toFixed(2) : originalPrice.toFixed(2)}
               </span>
-              {item?.discountPrice && item?.OrigialPrice && (
+              {/* Only show original price if there's a real discount */}
+              {discountPercent > 0 && (
                 <span className="text-sm text-gray-500 line-through">
-                  ₹{item?.OrigialPrice}
+                  ₹{originalPrice.toFixed(2)}
                 </span>
               )}
             </div>
-            {item?.discountPrice && (
+            {/* Only show savings if there's a real discount */}
+            {discountPercent > 0 && (
               <span className="text-xs text-green-600 font-medium mt-1">
-                You save ₹{(parseFloat(item.OrigialPrice) - parseFloat(item.discountPrice)).toFixed(2)}
+                You save ₹{(originalPrice - discountPrice).toFixed(2)}
               </span>
             )}
           </div>
@@ -144,7 +153,7 @@ export const ShopCard = ({ id, item }) => {
 
         {/* Rating (placeholder - can be connected to reviews) */}
         <div className="flex items-center gap-1 mt-3">
-          <div className="flex text-yellow-400">
+          <div className="flex text-green-500">
             {"★".repeat(4)}{"☆"}
           </div>
           <span className="text-xs text-gray-500">(4.0)</span>
