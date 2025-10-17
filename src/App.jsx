@@ -173,6 +173,14 @@ function App() {
                   }
                 />
                 <Route
+                  path="/product/:productId/review"
+                  element={
+                    <AnimatePage>
+                      <Review />
+                    </AnimatePage>
+                  }
+                />
+                <Route
                   path="wishlist"
                   element={
                     <AnimatePage>

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import ReactFlipCard from 'reactjs-flip-card';
 import 'reactjs-flip-card/dist/ReactFlipCard.css';
 import { motion } from "framer-motion";
 
-// Importing images
+// Fallback images from assets
 import ProductImage1 from '../../assets/Homepage/1.png';
 import ProductImage2 from '../../assets/Homepage/2.png';
 import ProductImage3 from '../../assets/Homepage/3.png';
@@ -14,6 +15,19 @@ import ProductImage6 from '../../assets/Homepage/6.png';
 import ProductImage7 from '../../assets/Homepage/7.png';
 import ProductImage8 from '../../assets/Homepage/8.png';
 import ProductImage9 from '../../assets/Homepage/9.png';
+
+// Array of fallback images
+const fallbackImages = [
+  ProductImage1,
+  ProductImage2,
+  ProductImage3,
+  ProductImage4,
+  ProductImage5,
+  ProductImage6,
+  ProductImage7,
+  ProductImage8,
+  ProductImage9,
+];
 
 // Hook to detect mobile screen
 const useIsMobile = () => {
@@ -27,99 +41,42 @@ const useIsMobile = () => {
   return isMobile;
 };
 
-// Data
-const cards = [
-  {
-    image: ProductImage1,
-    content: "Harness nature’s microbes to enrich soil fertility and boost plant vigor",
-    list1: "Naturally fixes atmospheric nitrogen (Rhizobium, Azospirillum)",
-    list2: "Enhances root nodulation and early growth",
-    list3: "Builds long-term organic matter in soil",
-    list4: "Safe for organic and conventional farming",
-    categoryId: "uya2xkeoz2c2yysibndo2nib",
-    category: "bio-fertilizers",
-  },
-  {
-    image: ProductImage2,
-    content: "Keep fungal diseases under control with powerful, living formulations.",
-    list1: "Uses Trichoderma and antagonistic microbes to suppress root rot, blights, mildews",
-    list2: "Colonizes rhizosphere for ongoing disease protection",
-    list3: "Non-toxic, residue-free and safe for the environment",
-    list4: "Proven efficacy on fruits, vegetables, cereals and ornamentals",
-    categoryId: "axs3xv48f4gcbzto0wfqxb15",
-    category: "bio-fungicides"
-  },
-  {
-    image: ProductImage3,
-    content: "Precision pest control that protects crops without chemical residues.",
-    list1: "Targets caterpillars, aphids, whiteflies and other major pests",
-    list2: "Based on Bacillus thuringiensis and other eco-friendly strains",
-    list3: "Harmless to pollinators, soil fauna and beneficial insects",
-    list4: "Fully compatible with Integrated Pest Management (IPM)",
-    categoryId: "u1vc546apu4q4zabnaqehojj",
-    category: "bio-insecticides",
-  },
-  {
-    image: ProductImage4,
-    content: "Defend your root zone from damaging nematodes naturally.",
-    list1: "Contains specialized fungi that invade and neutralize root-knot and lesion nematodes",
-    list2: "Restores healthy root architecture and nutrient uptake",
-    list3: "Fully biodegradable with zero chemical residues",
-    list4: "Ideal for high-value and sensitive crops",
-    categoryId: "xkvt03fkolfqdiem3s1s6kxs",
-    category: "bio-nematicides",
-  },
-  {
-    image: ProductImage8,
-    content: "Deliver essential trace elements where plants need them most.",
-    list1: "Precision-chelated zinc, iron, manganese and more for rapid uptake",
-    list2: "Boosts chlorophyll synthesis and enzyme function",
-    list3: "Corrects hidden deficiencies to improve crop quality",
-    list4: "Tailored formulations for horticultural and row crops",
-  },
-  {
-    image: ProductImage5,
-    content: "Supercharge plant growth and stress resilience with botanical extracts.",
-    list1: "Seaweed concentrates and amino acids accelerate germination and flowering",
-    list2: "Improves drought, heat and salinity tolerance",
-    list3: "Enhances nutrient uptake when used with fertilizers and bio-inputs",
-    list4: "Safe, sustainable support for every growth stage",
-    categoryId: "optx1dl0o3jafx8o4y8ns3qk",
-    category: "bio-stimulants",
-  },
-  {
-    image: ProductImage6,
-    content: "Transform depleted soils into moisture-holding, fertile substrates.",
-    list1: "Mycorrhizal fungi and humic substances improve aggregation and aeration",
-    list2: "Increases water retention and root penetration",
-    list3: "Builds organic matter for sustained soil health",
-    list4: "Supports robust crop growth season after season",
-  },
-  {
-    image: ProductImage7,
-    content: "Rebalance your soil microbiome to foster healthier crops.",
-    list1: "Introduces beneficial Bacillus, Pseudomonas and Streptomyces strains",
-    list2: "Outcompetes pathogens and accelerates nutrient cycling",
-    list3: "Strengthens root systems for durable plant health",
-    list4: "Reduces reliance on synthetic inputs over time",
-    categoryId: "n4xs5hxc3ys1538w9vb58z5n",
-    category: "probiotics",
-  },
-  {
-    image: ProductImage9,
-    content: "Tailored bio-solutions for unique agronomic challenges.",
-    list1: "Omega Aqua™: Pond bioremediation and algae control systems",
-    list2: "Sil-Mo™: Silica mobilizers to reinforce cell walls and enhance stress tolerance",
-    list3: "Custom blends designed for your specific environment and crop needs",
-    list4: "Safe for organic and conventional farming",
-    categoryId: "d8msvofzwys2vipqq8xmy3et",
-    category: "special-products",
-  },
-];
-
 export const BestSell = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  
+  // Get categories from Redux store (already fetched in App.jsx)
+  const { category } = useSelector((state) => state.leaf);
+
+  // Helper function to get image source
+  const getImageSource = (cat, index) => {
+    // If category has an image from Strapi, use it
+    if (cat?.image?.url) {
+      return `${import.meta.env.VITE_Image_BASE_URL}${cat.image.url}`;
+    }
+    // Otherwise use fallback image based on index
+    const fallbackIndex = index % fallbackImages.length;
+    return fallbackImages[fallbackIndex];
+  };
+
+  // Console log to debug
+  useEffect(() => {
+    console.log('=== CATEGORIES DATA ===');
+    console.log('Total categories:', category?.length);
+    console.log('Categories:', category);
+    
+    if (category && category.length > 0) {
+      category.forEach((cat, index) => {
+        console.log(`\n--- Category ${index + 1}: ${cat?.Name} ---`);
+        console.log('Document ID:', cat?.documentId);
+        console.log('Has image from Strapi?', !!cat?.image?.url);
+        console.log('Image object:', cat?.image);
+        console.log('Image URL:', cat?.image?.url);
+        console.log('Will use:', cat?.image?.url ? 'Strapi image' : `Fallback image ${index % fallbackImages.length + 1}`);
+        console.log('Final image source:', getImageSource(cat, index));
+      });
+    }
+  }, [category]);
 
   const handleNavigate = (categoryId) => {
     if (categoryId) {
@@ -136,8 +93,8 @@ export const BestSell = () => {
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {cards.map((card, idx) => (
-          <div key={idx} className="w-full aspect-[3/4]">
+        {category?.map((cat, idx) => (
+          <div key={cat.documentId || idx} className="w-full aspect-[3/4]">
             <ReactFlipCard
               containerStyle={{ width: '100%', height: '100%' }}
               containerCss="clickable"
@@ -155,45 +112,64 @@ export const BestSell = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '1.2rem',
-                textAlign: 'left',
+                padding: '1.5rem',
+                textAlign: 'center',
                 border: "2px solid green",
                 flexDirection: 'column'
               }}
               frontComponent={
-                <motion.img
-                  src={card.image}
-                  alt={`Product ${idx + 1}`}
-                  className="w-full h-full object-cover"
+                <motion.div
+                  className="w-full h-full"
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1 }}
                   viewport={{ once: true }}
-                />
+                >
+                  <img
+                    src={getImageSource(cat, idx)}
+                    alt={cat?.Name || `Category ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    onLoad={() => console.log(`✅ Image loaded for: ${cat?.Name}`, cat?.image?.url ? '(Strapi)' : '(Fallback)')}
+                    onError={(e) => {
+                      console.error(`❌ Image failed to load for: ${cat?.Name}`);
+                      console.error('Failed URL:', e.target.src);
+                    }}
+                  />
+                </motion.div>
               }
               backComponent={
-                <>
-                  <span className="font-bold text-lg text-black">{card.content}</span>
-                  <ul className='mt-2 text-sm text-gray-700'>
-                    <li>1. {card.list1}</li>
-                    <li>2. {card.list2}</li>
-                    <li>3. {card.list3}</li>
-                    <li>4. {card.list4}</li>
-                  </ul>
-                  {card.categoryId && (
-                    <button
-                      className="mt-5 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full transition duration-300"
-                      onClick={() => handleNavigate(card.categoryId)}
-                    >
-                      View Products
-                    </button>
+                <div className="flex flex-col items-center justify-center h-full">
+                  <h3 className="font-bold text-xl md:text-2xl text-black mb-3">
+                    {cat?.Name}
+                  </h3>
+                  
+                  {/* Dynamic description from Strapi */}
+                  {cat?.description && (
+                    <p className="text-sm text-gray-700 mb-4 leading-relaxed">
+                      {cat.description}
+                    </p>
                   )}
-                </>
+                  
+                  <button
+                    className="mt-auto bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-full transition duration-300 font-medium"
+                    onClick={() => handleNavigate(cat?.documentId)}
+                  >
+                    View Products
+                  </button>
+                </div>
               }
             />
           </div>
         ))}
       </div>
+
+      {/* Empty state if no categories */}
+      {(!category || category.length === 0) && (
+        <div className="text-center py-12">
+          <p className="text-gray-600">No categories available</p>
+        </div>
+      )}
     </section>
   );
 };
