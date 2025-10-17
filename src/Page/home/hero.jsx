@@ -37,7 +37,7 @@ export const Hero = () => {
         <video
           ref={videoRef}
           className="w-full h-full object-cover"
-          src="src/assets/videoplayback.mp4"
+          src="/videoplayback.mp4"
           autoPlay
           muted
           loop
